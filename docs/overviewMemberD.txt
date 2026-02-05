@@ -9,7 +9,7 @@ Week 3:
 
     Design cipher logic
         CipherService - String decipher(String cipherText, Path keyPath)
-            Loads + validates key + returns deciphered text)
+            Loads + validates key + returns deciphered text
 
         CipherKey - Map<Character, Character> decodeMap
             Represents the key in memory
