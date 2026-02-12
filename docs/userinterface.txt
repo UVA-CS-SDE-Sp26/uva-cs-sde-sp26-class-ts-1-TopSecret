@@ -1,0 +1,65 @@
+Prompt:
+responsible for connecting the command line to the file handler, requesting file contents,
+and returning readable text. When the program is executed with no arguments, this part of
+the program should provide a list of files available (as provided from Team Member B),
+along with a corresponding number for selection.
+
+-----------
+Class Structure:
+UserInterface.java
+- Receives command-line arguments (passed from Team Member C)
+- Determines which request path to run (with ID vs. no ID)
+- Validates all user/scanner input and exits on any error
+- Returns a validated request (fileId + optional keyArg) back to Team Member C
+
+-----------
+Methods:
+processCommandLine(String[] args)
+    if args.length > 0, call and return parseDirectFileRequest(args)
+    otherwise call and return interactiveFileSelection()
+
+DirectFileRequest(String[] args)
+    Read fileId from args[0]
+    If args.length == 2, store keyArg from args[1]
+    Validate fileId format
+    error if args.length > 2
+    Return UiRequest(fileId, keyArg)
+
+interactiveFileSelection()
+    listFiles()
+    Query user for the fileId via Scanner
+    Validate fileId against the displayed list
+    Return UiRequest(fileId, null)
+
+listFiles()
+    Query FileHandler/Team Member B for the available files list
+    Print out files list, displaying indices for each selectable file
+    Return the set/list of valid fileIds for validation
+
+validateFileId(String raw, Set<String> validIds)
+    Trim whitespace
+    Ensure numeric-only (and correct length if enforced)
+    Ensure membership in validIds when provided
+    Return normalized fileId
+
+exitWithError(String message)
+    Print error message
+    Terminate program immediately (System.exit(1))
+
+-----------
+Error Handling:
+- Non-numeric file IDs
+- Blank input / whitespace-only input
+- ID not in list
+- Too many command-line arguments (if enforced)
+- Scanner exceptions / EOF / unexpected input
+On any error: print a clear message and exit immediately.
+
+-----------
+Tests: 
+1. No args, multiple files: interactiveFileSelection runs, list prints, valid selection returns
+2. Invalid id input (letters / blank / whitespace) → exits with error
+3. Out-of-range id (not in list) → exits with error
+4. Direct id arg valid (e.g., 01) → parseDirectFileRequest returns correct UiRequest
+5. Direct id arg invalid (e.g., -1, abc) → exits with error
+6. Too many args (if enforced) → exits with error
